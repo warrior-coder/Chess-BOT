@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- @click="cellAction(i, j)" -->
     <div id="vue1">
         <div class="board">  
                 <div v-for="hist in history" class="board__cell_bg" :style="{ backgroundColor: hist.hc, transform: 'translate(' + hist.hx + '00%,' + hist.hy + '00%)' }"></div>

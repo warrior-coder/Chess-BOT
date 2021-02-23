@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,100&display=swap');
+
+BODY {
+    margin: 0;
+    padding: 0;
+    background: #312e2b;
+
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+}
+
+.board {
+    position: relative;
+    height: 500px;
+    width: 500px;
+    margin: 0 auto;
+    margin-top: 50px;
+    
+    border-top: solid 10px #7e4002;
+    border-right: solid 10px #502801;
+    border-bottom: solid 10px #502801;
+    border-left: solid 10px #7e4002;
+
+    background-image: url(data/board.svg);
+    background-size: 500px;
+
+    box-shadow: inset 0px 0px 21px 0px rgba(0, 0, 0, 0.7);
+
+    user-select: none;
+}
+
+.board__cell {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 12.5%;
+    width: 12.5%;
+
+    z-index: 99;
+
+    background-color: transparent;
+}
+
+.board__cell_bg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 12.5%;
+    width: 12.5%;
+
+    z-index: 1;
+}
+.board__figure {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 12.5%;
+
+    z-index: 9;
+    
+    transition: .8s;
+}
+
+@media(max-width: 700px) {
+    .board {
+        height: 400px;
+        width: 400px;
+        background-size: 400px;
+    }   
+}
+
+@media(max-width: 450px) {
+    .board {
+        height: 300px;
+        width: 300px;
+        background-size: 300px;
+    }   
+}

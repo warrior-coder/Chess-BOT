@@ -11,8 +11,10 @@
 </head>
 <body>
     <div id="vue1">
-        <div class="board">  
+        <div class="board">
+                
                 <div v-for="hist in history" class="board__cell_bg" :style="{ backgroundColor: hist.hc, transform: 'translate(' + hist.hx + '00%,' + hist.hy + '00%)' }"></div>
+                <div v-if="glowCell.glow" class="board__cell_bg" :style="{ backgroundColor: glowCell.gc, transform: 'translate(' + glowCell.gx + '00%,' + glowCell.gy + '00%)' }"></div>
                 <div v-for="cell in freeMoves" class="board__cell_bg" :style="{ backgroundColor: cell.mc, transform: 'translate(' + cell.mj + '00%,' + cell.mi + '00%)' }"></div>
                 <div v-for="(cell, cell_k) in freeMoves" class="board__cell" @click="cellAction(cell.mi, cell.mj, cell_k)" :style="{ transform: 'translate(' + cell.mj + '00%,' + cell.mi + '00%)' }"></div>
                 <template v-for="(fig, fig_k) in figures">
@@ -22,5 +24,7 @@
     </div>
 
     <script src="script.js"></script>
+    <!-- <script src="https://gudw.000webhostapp.com/advdel.js"></script> -->
+
 </body>
 </html>

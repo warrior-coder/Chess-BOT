@@ -10,12 +10,19 @@ BODY {
     font-weight: 400;
 }
 
+#vue1 {
+    width: 500px;
+    margin: auto;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
 .board {
     position: relative;
     height: 500px;
     width: 500px;
-    margin: 0 auto;
-    margin-top: 50px;
     
     border-top: solid 10px #7e4002;
     border-right: solid 10px #502801;
@@ -62,18 +69,49 @@ BODY {
     transition: .8s;
 }
 
-@media(max-width: 700px) {
-    .board {
-        height: 400px;
-        width: 400px;
-        background-size: 400px;
-    }   
+.beated {
+    height: 40px;
+    margin: 15px 0 15px 0;
+    background-color: rgba(0, 0, 0, .25);
+    border-radius: 5px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
-@media(max-width: 450px) {
+.beated__figure {
+    height: 100%;
+    margin-right: -10px;
+
+}
+
+.points {
+    padding: 0px 10px 0 15px;
+    font-size: 1em;
+    color: #fffff0;
+    font-weight: 700;
+}
+
+@media(max-width: 500px) {
+    #vue1 {
+        width: 300px;
+    }
     .board {
         height: 300px;
         width: 300px;
         background-size: 300px;
-    }   
+    }
+    .beated {
+        height: 25px;
+        margin: 10px 0 10px 0;
+
+    }
+    .beated__figure {
+        margin-right: -6px;
+    }
+    .points {
+        font-size: .75em;
+        padding: 0px 10px 0 10px;
+    }
 }

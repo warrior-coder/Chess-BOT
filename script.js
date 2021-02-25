@@ -28,9 +28,14 @@ vue1 = new Vue({
     data: {
         board: [],
         figures: [],
-        history: [],
+        beatedWhite: [],
+        blackPoints: 0,
+        beatedBlack: [],
+        whitePoints: 0,
         freeMoves: [],
-        glowCell: {gx: -1, gy: -1, gc: YELLOW, glow: false},
+        cellActive: {x: -1, y: -1, col: YELLOW, bool: false},
+        cellFrom: {x: -1, y: -1, col: YELLOW, bool: false},
+        cellTo: {x: -1, y: -1, col: YELLOW, bool: false},
         turn: 1,
     },
 
@@ -45,9 +50,33 @@ vue1 = new Vue({
             if (this.turn > 0 && this.figures[fugure_k].type > 0)
             {
                 this.freeMoves = this.findMoves(this.board, i, j);
-                this.glowCell.gx = j;
-                this.glowCell.gy = i;
-                this.glowCell.glow = true;
+
+                let len = this.freeMoves.length;
+                for (let k = 0; k < len; k++)
+                {
+                    /* MAKE FAKE MOVE */
+                    let tempFig = this.board[this.freeMoves[k].mi][this.freeMoves[k].mj];
+                    this.board[this.freeMoves[k].mi][this.freeMoves[k].mj] = this.board[i][j];
+                    this.board[i][j] = 0;
+                    
+                    /* COUNT BOT POINTS */
+                    let points = this.CountSidePoints(this.board, -1);
+
+                    /* RETURN FAKE MOVE */
+                    this.board[i][j] = this.board[this.freeMoves[k].mi][this.freeMoves[k].mj];
+                    this.board[this.freeMoves[k].mi][this.freeMoves[k].mj] = tempFig;
+
+                    if(points > 500)
+                    {
+                        this.freeMoves.splice(k,1);
+                        k--;
+                        len--;
+                    }
+                    
+                }
+                this.cellActive.x = j;
+                this.cellActive.y = i;
+                this.cellActive.bool = true;
                 i2 = i;
                 j2 = j;
                 figureActive = fugure_k;
@@ -55,11 +84,11 @@ vue1 = new Vue({
             else if (figureActive)
             {
                 this.freeMoves.splice(0);
-                this.glowCell.glow = false;
+                this.cellActive.bool = false;
                 figureActive = 0;
             }
         },
-        cellAction(ci, cj, ck)
+        cellAction(ci, cj)
         {
             if (figureActive)
             {
@@ -68,7 +97,7 @@ vue1 = new Vue({
 
                 this.freeMoves.splice(0);
                 figureActive = 0;
-                this.glowCell.glow = false;
+                this.cellActive.bool = false;
                 
                 this.turn *= -1;
 
@@ -82,12 +111,11 @@ vue1 = new Vue({
 
             let blackFigs = this.CollectSideFigures(this.board, -1);
             
-
-            blackFigs.forEach(blackFig =>
+            for (let blackFig of blackFigs)
             {
                 let botMoves = this.findMoves(this.board, blackFig.i, blackFig.j); // GENERATE BOT MOVES
 
-                botMoves.forEach(botMove =>
+                for (let botMove of botMoves)
                 {
 
                     /* MAKE FAKE MOVE */
@@ -95,34 +123,35 @@ vue1 = new Vue({
                     this.board[botMove.mi][botMove.mj] = blackFig.type;
                     this.board[blackFig.i][blackFig.j] = 0;
 
-
                     /* PLAYER POINTS */
-                    let points = botMove.mp + this.CountSidePoints(this.board, 1);
+                    let points = botMove.mp + this.CountSidePoints(this.board, 1) + this.CountFigurePoints(this.board, botMove.mi, botMove.mj);
 
-                    if(points > bestPoints)
+                    if(points >= bestPoints && this.isUnderAttack(this.board, botMove.mi, botMove.mj) == 0)
                     {
-                        bestBlackFig = blackFig;
-                        i_best = botMove.mi;
-                        j_best = botMove.mj;
-                        bestPoints = points;
-                    }
-                    else if(points == bestPoints)
-                    {
-                        if (blackFig.type > bestBlackFig.type)
+                        if(points > bestPoints)
                         {
                             bestBlackFig = blackFig;
                             i_best = botMove.mi;
                             j_best = botMove.mj;
                             bestPoints = points;
                         }
+                        else
+                        {
+                            if (blackFig.type > bestBlackFig.type)
+                            {
+                                bestBlackFig = blackFig;
+                                i_best = botMove.mi;
+                                j_best = botMove.mj;
+                                bestPoints = points;
+                            }
+                        }
                     }
 
                     /* RETURN FAKE MOVE */
-                    this.board[botMove.mi][botMove.mj] = tempFig;
                     this.board[blackFig.i][blackFig.j] = blackFig.type;
-                });
-
-            });
+                    this.board[botMove.mi][botMove.mj] = tempFig;
+                }
+            }
             console.log('FIG:', bestBlackFig);
             console.log('BEST MOVE:', j_best, i_best);
             console.log('BEST POINTS', bestPoints);
@@ -138,24 +167,54 @@ vue1 = new Vue({
                 for (let j = 0; j < 8; j++)
                     if (board[i][j] * side > 0)
                     {
-                        sideFigures.push({i: i, j: j, type: board[i][j]});
+                        sideFigures.push( {i: i, j: j, type: board[i][j]} );
                     }
 
             return sideFigures;
         },
+        isUnderAttack(board, fi, fj)
+        {
+            let otherSide = (board[fi][fj] > 0) ? -1 : 1;
+            let attackCount = 0;
+
+            let otherFigures = this.CollectSideFigures(board, otherSide); // GENERATE OTHER SIDE FIGURES
+
+            for (let otherFigure of otherFigures)
+            {
+                otherMoves = this.findMoves(board, otherFigure.i, otherFigure.j); // GENERATE OTHER SIDE MOVES
+                for (let otherMove of otherMoves)
+                {
+                    if (otherMove.mi == fi && otherMove.mj == fj) attackCount++;
+                }
+            }
+
+            return attackCount;
+        },
+        CountFigurePoints(board, fi, fj)
+        {
+            let figureMoves = this.findMoves(board, fi, fj);
+            let figurePoints = 0;
+
+            for (let figureMove of figureMoves)
+            {
+                figurePoints += figureMove.mp;
+            }
+
+            return figurePoints;
+        },
         CountSidePoints(board, side)
         {
-            let sideFigures = this.CollectSideFigures(board, side), sidePoints = 0;
+            let sideFigures = this.CollectSideFigures(board, side);
+            let sidePoints = 0;
           
-            sideFigures.forEach(sideFig =>
+            for (let sideFig of sideFigures)
             {
                 let moves = this.findMoves(board, sideFig.i, sideFig.j); // GENERATE MOVES
-                moves.forEach( move =>
+                for (let move of moves)
                 {
-                    sidePoints += move.mp;
-                });
-
-            });
+                    sidePoints += move.mp; // COUNT MOVE POINTS
+                }
+            }
 
             return sidePoints;
         },
@@ -166,6 +225,16 @@ vue1 = new Vue({
                 let index = this.figures.findIndex(element => {
                     if(element.x == j_to && element.y == i_to && element.type != 0) return true;
                 });
+                if (this.figures[index].type > 0)
+                {
+                    this.beatedWhite.push(this.figures[index].type);
+                    this.blackPoints += this.convertToPoints(this.figures[index].type);
+                }
+                else
+                {
+                    this.beatedBlack.push(this.figures[index].type);
+                    this.whitePoints += this.convertToPoints(this.figures[index].type);
+                }
                 this.figures[index].type = 0;
             }
         
@@ -181,8 +250,8 @@ vue1 = new Vue({
             this.board[i_from][j_from] = 0;
 
             /* HISTORY */
-            this.history[0] = {hx: j_to, hy: i_to, hc: YELLOW};
-            this.history[1] = {hx: j_from, hy: i_from, hc: YELLOW};
+            this.cellFrom = {x: j_to, y: i_to, col: YELLOW, bool: true};
+            this.cellTo = {x: j_from, y: i_from, col: YELLOW, bool: true};
 
             /* WHITE QUEEN CHECK */
             if(this.figures[index].type == 1 && i_to == 0) 
@@ -198,11 +267,18 @@ vue1 = new Vue({
                 this.board[i_to][j_to] = -9;
             }
         },
+        convertToPoints(figureType)
+        {
+            switch (Math.abs(figureType))
+            {
+                case 4: return 3;
+                case 9: return 8;
+                default: return Math.abs(figureType);
+            }
+        },
         findMoves(board, i, j)
         {
             let findMoves = [];
-            // findMoves.push({mi: i, mj: j, mp: 0, mc: YELLOW}); // CURRENT POSITION
-            
             switch (board[i][j]) {
                 /* PAWN */
                 case -1:
@@ -404,56 +480,3 @@ vue1 = new Vue({
         },
     },
 });
-
-// botAction()
-//         {
-//             while (this.turn < 0)
-//                 {
-//                     let blackFigures = [];
-//                     for (let k = 0; k < 16; k++)
-//                         if (this.figures[k].type < 0) blackFigures.push(k); // COLLECT ALL BLACK FIGURES
-                    
-//                     console.log(blackFigures);
-//                     if(blackFigures.length == 0) // IF NO BLACK FIGURES
-//                     {
-//                         this.turn *= -1;
-//                         break;
-//                     }
-
-//                     let randFigure = blackFigures[Math.floor(Math.random() * (blackFigures.length-1))] // CHOOSE RANDOM BLACK FIGURE
-//                     console.log('TRY:', randFigure, ':', this.figures[randFigure].x, this.figures[randFigure].y);
-                    
-//                     let botMoves = this.findMoves(this.board, this.figures[randFigure].y, this.figures[randFigure].x); // GENERATE BOT MOVES
-//                     let nMoves = botMoves.length;
-
-//                     if(nMoves > 1) // IF HAS MOVES
-//                     {
-//                         console.log('---MOVE---');
-
-//                         let sump = 0;
-//                         botMoves.forEach(fm => {
-//                             if(fm.mp != 0) sump += fm.mp
-//                         });
-//                         console.log(sump);
-
-//                         randMove = Math.floor(Math.random() * (nMoves-1)) + 1;
-//                         let bi = botMoves[randMove].mi;
-//                         let bj = botMoves[randMove].mj;
-//                         let bi2 = this.figures[randFigure].y;
-//                         let bj2 = this.figures[randFigure].x;
-
-//                         /* IF BEAT */
-//                         if (botMoves[randMove].mp != 0)
-//                         {
-//                             console.log('---BEAT---');
-//                             let index = this.figures.findIndex(element => {
-//                                 if(element.x == bj && element.y == bi && element.type > 0) return true;
-//                             });
-//                             this.figures[index].type = 0;
-//                         }
-
-//                         this.figureMove(randFigure, bi, bj, bi2, bj2); // MAKE RANDOM MOVE
-//                         this.turn *= -1;
-//                     }
-//                 }
-//         },

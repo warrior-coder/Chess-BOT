@@ -11,20 +11,35 @@
 </head>
 <body>
     <div id="vue1">
+        <div class="beated">
+            <template v-for="fig in beatedWhite">
+                <img :src="`data/${fig}.png`" class="beated__figure" alt="BEATED"> 
+            </template>
+            <div v-show="blackPoints > 0" class="points">
+                {{ blackPoints }}
+            </div>
+        </div>
         <div class="board">
-                
-                <div v-for="hist in history" class="board__cell_bg" :style="{ backgroundColor: hist.hc, transform: 'translate(' + hist.hx + '00%,' + hist.hy + '00%)' }"></div>
-                <div v-if="glowCell.glow" class="board__cell_bg" :style="{ backgroundColor: glowCell.gc, transform: 'translate(' + glowCell.gx + '00%,' + glowCell.gy + '00%)' }"></div>
+                <div v-show="cellFrom.bool" class="board__cell_bg" :style="{ backgroundColor: cellFrom.col, transform: 'translate(' + cellFrom.x + '00%,' + cellFrom.y + '00%)' }"></div>
+                <div v-show="cellTo.bool" class="board__cell_bg" :style="{ backgroundColor: cellTo.col, transform: 'translate(' + cellTo.x + '00%,' + cellTo.y + '00%)' }"></div>
+                <div v-show="cellActive.bool" class="board__cell_bg" :style="{ backgroundColor: cellActive.col, transform: 'translate(' + cellActive.x + '00%,' + cellActive.y + '00%)' }"></div>
+
                 <div v-for="cell in freeMoves" class="board__cell_bg" :style="{ backgroundColor: cell.mc, transform: 'translate(' + cell.mj + '00%,' + cell.mi + '00%)' }"></div>
                 <div v-for="(cell, cell_k) in freeMoves" class="board__cell" @click="cellAction(cell.mi, cell.mj, cell_k)" :style="{ transform: 'translate(' + cell.mj + '00%,' + cell.mi + '00%)' }"></div>
                 <template v-for="(fig, fig_k) in figures">
-                    <img :src="`data/${fig.type}.png`" class="board__figure" @click="figureAction(fig.y, fig.x, fig_k)" :style="{ display: (fig.type == 0) ? 'none' : '', transform: 'translate(' + fig.x + '00%,' + fig.y + '00%)' }" alt="FIGURE"> 
+                    <img v-show="fig.type != 0" :src="`data/${fig.type}.png`" class="board__figure" @click="figureAction(fig.y, fig.x, fig_k)" :style="{ transform: 'translate(' + fig.x + '00%,' + fig.y + '00%)' }" alt="FIGURE"> 
                 </template>
+        </div>
+        <div class="beated">
+            <template v-for="fig in beatedBlack">
+                <img :src="`data/${fig}.png`" class="beated__figure" alt="BEATED"> 
+            </template>
+            <div v-show="whitePoints > 0" class="points">
+                {{ whitePoints }}
+            </div>
         </div>
     </div>
 
     <script src="script.js"></script>
-    <!-- <script src="https://gudw.000webhostapp.com/advdel.js"></script> -->
-
 </body>
 </html>

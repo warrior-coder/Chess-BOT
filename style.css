@@ -17,6 +17,8 @@ BODY {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+
+    user-select: none;
 }
 
 .board {
@@ -24,17 +26,18 @@ BODY {
     height: 500px;
     width: 500px;
     
-    border-top: solid 10px #7e4002;
-    border-right: solid 10px #502801;
-    border-bottom: solid 10px #502801;
-    border-left: solid 10px #7e4002;
+    border-top: solid #7e4002;
+    border-right: solid #502801;
+    border-bottom: solid #502801;
+    border-left: solid #7e4002;
+    border-width: 10px;
 
     background-image: url(data/board.svg);
     background-size: 500px;
 
     box-shadow: inset 0px 0px 21px 0px rgba(0, 0, 0, 0.7);
 
-    user-select: none;
+    
 }
 
 .board__cell {
@@ -83,7 +86,6 @@ BODY {
 .beated__figure {
     height: 100%;
     margin-right: -10px;
-
 }
 
 .points {
@@ -91,6 +93,46 @@ BODY {
     font-size: 1em;
     color: #fffff0;
     font-weight: 700;
+}
+
+.gameover_wrapper {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    top: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 999;
+}
+
+.gameover_title {
+    font-size: 3.75em;
+    font-weight: bold;
+}
+
+.button_rematch {
+    width: 160px;
+    height: 40px;
+    margin: auto;
+
+    color: #fffff0;
+    font-size: 1em;
+    letter-spacing: 1.5px;
+
+    background-color: #272421;
+    border-radius: 15px;
+    border-bottom: 5px solid #181615;
+    border-right: 5px solid #181615;
+
+    cursor: pointer;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 @media(max-width: 500px) {
@@ -101,6 +143,8 @@ BODY {
         height: 300px;
         width: 300px;
         background-size: 300px;
+        border-width: 5px;
+
     }
     .beated {
         height: 25px;
@@ -113,5 +157,14 @@ BODY {
     .points {
         font-size: .75em;
         padding: 0px 10px 0 10px;
+    }
+    .gameover_title {
+        font-size: 2.25em;
+    }
+    .button_rematch {
+    width: 120px;
+    height: 30px;
+    font-size: .8em;
+    letter-spacing: 1.5px;
     }
 }

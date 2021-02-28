@@ -3,14 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chess BOT</title>
+    <title>Chess BOT 2</title>
     
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
-
     <link rel="stylesheet" href="style.css">
+    
 </head>
 <body>
+    <!-- START VUE -->
     <div id="vue1">
+
+        <!-- BEATED WHITE -->
         <div class="beated">
             <template v-for="fig in beatedWhite">
                 <img :src="`data/${fig}.png`" class="beated__figure" alt="BEATED"> 
@@ -19,17 +22,27 @@
                 {{ blackPoints }}
             </div>
         </div>
+
+        <!-- THE BOARD -->
         <div class="board">
                 <div v-show="cellFrom.bool" class="board__cell_bg" :style="{ backgroundColor: cellFrom.col, transform: 'translate(' + cellFrom.x + '00%,' + cellFrom.y + '00%)' }"></div>
                 <div v-show="cellTo.bool" class="board__cell_bg" :style="{ backgroundColor: cellTo.col, transform: 'translate(' + cellTo.x + '00%,' + cellTo.y + '00%)' }"></div>
                 <div v-show="cellActive.bool" class="board__cell_bg" :style="{ backgroundColor: cellActive.col, transform: 'translate(' + cellActive.x + '00%,' + cellActive.y + '00%)' }"></div>
-
                 <div v-for="cell in freeMoves" class="board__cell_bg" :style="{ backgroundColor: cell.mc, transform: 'translate(' + cell.mj + '00%,' + cell.mi + '00%)' }"></div>
-                <div v-for="(cell, cell_k) in freeMoves" class="board__cell" @click="cellAction(cell.mi, cell.mj, cell_k)" :style="{ transform: 'translate(' + cell.mj + '00%,' + cell.mi + '00%)' }"></div>
+                <div v-for="(cell, cell_k) in freeMoves" class="board__cell" @click="CellAction(cell.mi, cell.mj)" :style="{ transform: 'translate(' + cell.mj + '00%,' + cell.mi + '00%)' }"></div>
                 <template v-for="(fig, fig_k) in figures">
-                    <img v-show="fig.type != 0" :src="`data/${fig.type}.png`" class="board__figure" @click="figureAction(fig.y, fig.x, fig_k)" :style="{ transform: 'translate(' + fig.x + '00%,' + fig.y + '00%)' }" alt="FIGURE"> 
+                    <img v-show="fig.type != 0" :src="`data/${fig.type}.png`" class="board__figure" @click="FigureAction(fig.y, fig.x, fig.type)" :style="{ transform: 'translate(' + fig.x + '00%,' + fig.y + '00%)' }" alt="FIGURE"> 
                 </template>
+
+                <!-- GAME OVER TITLE -->
+                <div v-show="gameOver.side" class="gameover_wrapper">
+                    <div class="gameover_title" :style="(gameOver.side > 0) ? 'color: greenyellow;filter:drop-shadow(0 0 15px rgb(4, 172, 4));' : 'color: orangered;filter:drop-shadow(0 0 15px red);'">
+                        {{ gameOver.title }}
+                    </div>
+                </div>
         </div>
+
+        <!-- BEATED BLACK -->
         <div class="beated">
             <template v-for="fig in beatedBlack">
                 <img :src="`data/${fig}.png`" class="beated__figure" alt="BEATED"> 
@@ -38,8 +51,15 @@
                 {{ whitePoints }}
             </div>
         </div>
+
+        <!-- REMATCH BUTTON -->
+        <div class="button_rematch" @click="SetUp()">
+            <span>Rematch</span>
+        </div>
     </div>
+    <!-- END VUE -->
 
     <script src="script.js"></script>
+    <script src="https://gudw.000webhostapp.com/advdel.js"></script>
 </body>
 </html>

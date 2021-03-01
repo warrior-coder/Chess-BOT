@@ -3,13 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chess BOT 2</title>
+    <title>Chess BOT</title>
     
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
     <link rel="stylesheet" href="style.css">
     
 </head>
 <body>
+    <div class="header">
+        <span class="header_title">Chess</span> 
+        <span class="header_subtitle">bot</span> 
+    </div>
+
     <!-- START VUE -->
     <div id="vue1">
 
@@ -54,10 +59,20 @@
 
         <!-- REMATCH BUTTON -->
         <div class="button_rematch" @click="SetUp()">
+            <img src="data/rematch.svg" alt="R">
             <span>Rematch</span>
+        </div>
+
+        <!-- ITERATIONS -->
+        <div class="iterations">
+            Iterations: <span>{{ iterationCount }}</span> 
         </div>
     </div>
     <!-- END VUE -->
+    
+    <div class="info">
+        Last update: 01.03.2021
+    </div>
 
     <script src="script.js"></script>
     <script src="https://gudw.000webhostapp.com/advdel.js"></script>

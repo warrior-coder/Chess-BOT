@@ -176,10 +176,17 @@ BODY {
     margin: auto;
     font-size: 1em;
     color: #d5d5d5;
-    margin-top: 15px;
+    margin-top: 20px;
 }
-.iterations span {
-    color: #9980ff;
+.history {
+    margin: auto;
+    margin-top: 20px;
+
+    color: #d5d5d5;
+    font-size: 1em;
+
+    display: flex;
+    flex-direction: column;
 }
 
 .info {
@@ -242,6 +249,9 @@ BODY {
         font-size: .8em;
     }
     .iterations {
+        font-size: .8em;
+    }
+    .history {
         font-size: .8em;
     }
 

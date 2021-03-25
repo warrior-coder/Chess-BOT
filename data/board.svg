@@ -79,5 +79,25 @@
    <path d="m105 75h15v15h-15z" color="#000000" color-rendering="auto" dominant-baseline="auto" image-rendering="auto" solid-color="#000000" stop-color="#000000" style="font-feature-settings:normal;font-variant-alternates:normal;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variant-position:normal;font-variation-settings:normal;inline-size:0;isolation:auto;mix-blend-mode:normal;shape-margin:0;shape-padding:0;text-decoration-color:#000000;text-decoration-line:none;text-decoration-style:solid;text-indent:0;text-orientation:mixed;text-transform:none;white-space:normal"/>
    <path d="m105 45h15v15h-15z" color="#000000" color-rendering="auto" dominant-baseline="auto" image-rendering="auto" solid-color="#000000" stop-color="#000000" style="font-feature-settings:normal;font-variant-alternates:normal;font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;font-variant-position:normal;font-variation-settings:normal;inline-size:0;isolation:auto;mix-blend-mode:normal;shape-margin:0;shape-padding:0;text-decoration-color:#000000;text-decoration-line:none;text-decoration-style:solid;text-indent:0;text-orientation:mixed;text-transform:none;white-space:normal"/>
   </g>
+    <g font-family="Arial" font-size="5px">
+        <!-- NUMBERS -->
+        <text x="0.5" y="4.5" fill="blue"><tspan>1</tspan></text>
+        <text x="0.5" y="19.5" fill="white"><tspan>2</tspan></text>
+        <text x="0.5" y="34.5" fill="blue"><tspan>3</tspan></text>
+        <text x="0.5" y="49.5" fill="white"><tspan>4</tspan></text>
+        <text x="0.5" y="64.5" fill="blue"><tspan>5</tspan></text>
+        <text x="0.5" y="79.5" fill="white"><tspan>6</tspan></text>
+        <text x="0.5" y="94.5" fill="blue"><tspan>7</tspan></text>
+        <text x="0.5" y="109.5" fill="white"><tspan>8</tspan></text>
+        <!-- TEXT -->
+        <text x="11.5" y="118.5" fill="white"><tspan>a</tspan></text>
+        <text x="26.5" y="118.5" fill="blue"><tspan>b</tspan></text>
+        <text x="41.5" y="118.5" fill="white"><tspan>c</tspan></text>
+        <text x="56.5" y="118.5" fill="blue"><tspan>d</tspan></text>
+        <text x="71.5" y="118.5" fill="white"><tspan>e</tspan></text>
+        <text x="86.5" y="118.5" fill="blue"><tspan>f</tspan></text>
+        <text x="101.5" y="118.5" fill="white"><tspan>g</tspan></text>
+        <text x="116.5" y="118.5" fill="blue"><tspan>h</tspan></text>
+    </g>
  </g>
 </svg>

@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chess BOT</title>
     
-    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
     <link rel="stylesheet" href="style.css">
     
 </head>
@@ -16,7 +17,7 @@
     </div>
 
     <!-- START VUE -->
-    <div id="vue1">
+    <div id="vue1" translate="no">
 
         <!-- BEATED WHITE -->
         <div class="beated">
@@ -65,13 +66,24 @@
 
         <!-- ITERATIONS -->
         <div class="iterations">
-            Iterations: <span>{{ iterationCount }}</span> 
+            Iterations: <span style="color: #9980ff;">{{ iterationCount }}</span> 
+        </div>
+
+        <div class="history">
+            <div>
+                History:
+            </div>
+            <div v-for="(hist, hi) in history" style="margin-top: 5px;">
+                <span>{{ hi+1 }}.</span>
+                <span style="color: #d2c057;" v-html="hist"></span>
+            </div>
+           
         </div>
     </div>
     <!-- END VUE -->
     
     <div class="info">
-        Last update: 01.03.2021
+        Last update: 02.03.2021
     </div>
 
     <script src="script.js"></script>

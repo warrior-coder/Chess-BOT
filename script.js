@@ -1,7 +1,7 @@
 const NONE = 'transparent';
-const RED = 'rgba(255, 68, 0, 0.8)';
-const GREEN = 'rgba(153, 205, 50, 0.8)';
-const YELLOW = 'rgba(255, 255, 0, 0.9)';
+const RED = 'rgba(255, 68, 0, .8)';
+const GREEN = 'rgba(153, 205, 50, .8)';
+const YELLOW = 'rgba(255, 255, 0, .9)';
 const _FIGURES = [
     {type: -5, x: 0, y: 0},{type: -3, x: 1, y: 0},{type: -4, x: 2, y: 0},{type: -9, x: 3, y: 0},{type: -900, x: 4, y: 0},{type: -4, x: 5, y: 0},{type: -3, x: 6, y: 0},{type: -5, x: 7, y: 0},
     {type: -1, x: 0, y: 1},{type: -1, x: 1, y: 1},{type: -1, x: 2, y: 1},{type: -1, x: 3, y: 1},{type: -1, x: 4, y: 1},{type: -1, x: 5, y: 1},{type: -1, x: 6, y: 1},{type: -1, x: 7, y: 1},
@@ -10,13 +10,13 @@ const _FIGURES = [
 ];
 const _BOARD = [
     [-5, -3, -4, -9, -900, -4, -3, -5],
-    [-1, -1, -1, -1, -1, -1, -1, -1],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 1, 1, 1, 1, 1, 1, 1],
-    [5, 3, 4, 9, 900, 4, 3, 5],
+    [-1, -1, -1, -1,   -1, -1, -1, -1],
+    [ 0,  0,  0,  0,    0,  0,  0,  0],
+    [ 0,  0,  0,  0,    0,  0,  0,  0],
+    [ 0,  0,  0,  0,    0,  0,  0,  0],
+    [ 0,  0,  0,  0,    0,  0,  0,  0],
+    [ 1,  1,  1,  1,    1,  1,  1,  1],
+    [ 5,  3,  4,  9,  900,  4,  3,  5]
 ];
 
 /* VUE JS */
@@ -35,6 +35,7 @@ vue1 = new Vue({
         cellActive: {},
         cellFrom: {},
         cellTo: {},
+        history: [],
         gameOver: {},
         turn: 0,
         iterationCount: 0,
@@ -70,6 +71,7 @@ vue1 = new Vue({
             this.cellActive = {x: -1, y: -1, col: YELLOW, bool: false};
             this.cellFrom = {x: -1, y: -1, col: YELLOW, bool: false};
             this.cellTo = {x: -1, y: -1, col: YELLOW, bool: false};
+			this.history.splice(0);
             this.gameOver = {side: 0, title: ''};
             this.turn = 1;
             this.iterationCount = 0;
@@ -100,6 +102,8 @@ vue1 = new Vue({
             {
                 this.FigureMove(ci, cj, this.i2, this.j2); // MAKE MOVE
 
+                this.history.push('&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + this.ConvertToCoords(ci, cj));
+
                 this.freeMoves.splice(0);
                 this.cellActive.bool = false;
                 this.turn *= -1;
@@ -110,6 +114,35 @@ vue1 = new Vue({
                 }, 800);
                 
             }
+        },
+        ConvertToCoords(i, j)
+        {
+            let res = '';
+            switch (j)
+            {
+                case 0: res += 'a'; break;
+                case 1: res += 'b'; break;
+                case 2: res += 'c'; break;
+                case 3: res += 'd'; break;
+                case 4: res += 'e'; break;
+                case 5: res += 'f'; break;
+                case 6: res += 'g'; break;
+                case 7: res += 'h'; break;
+                default: res += 'X'; break;
+            }
+            switch (i)
+            {
+                case 0: res += '1'; break;
+                case 1: res += '2'; break;
+                case 2: res += '3'; break;
+                case 3: res += '4'; break;
+                case 4: res += '5'; break;
+                case 5: res += '6'; break;
+                case 6: res += '7'; break;
+                case 7: res += '8'; break;
+                default: res += 'X'; break;
+            }
+            return res;
         },
         CutMoves(moves, board, i, j, side)
         {
@@ -238,17 +271,52 @@ vue1 = new Vue({
         {
             this.iterationCount = 0;
             let bestMoveFound = this.MiniMaxRoot(3, this.board, -1); // FIND TREE TIME!
+            console.log('ITERATIONS:', this.iterationCount, '| POINTS:', bestMoveFound.points);
 
-            if (bestMoveFound.points > 900)
+           /* CHECKMATE BLACK */
+           if (bestMoveFound.points > 9000)
+           {
+                if (this.checkMate(this.board, -1))
+                {
+                    this.EndTheGame(1);
+                    return 0;
+                }
+                else
+                {
+                    bestMoveFound = this.MiniMaxRoot(1, this.board, -1);
+                    console.log('!-ITERATIONS:', this.iterationCount, '| POINTS:', bestMoveFound.points);
+                }
+           }
+           
+
+            this.FigureMove(bestMoveFound.i_to, bestMoveFound.j_to, bestMoveFound.i_from, bestMoveFound.j_from); // MAKE BEST MOVE
+            this.history[this.history.length-1] += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + this.ConvertToCoords(bestMoveFound.i_to, bestMoveFound.j_to);
+            this.turn *= -1;
+
+            /* CHECKMATE WHITE */
+            if (this.checkMate(this.board, 1))
             {
-                this.EndTheGame(1);
+                this.EndTheGame(-1);
                 return 0;
             }
 
-            console.log('ITERATIONS:', this.iterationCount, '| POINTS:', bestMoveFound.points);
-            this.FigureMove(bestMoveFound.i_to, bestMoveFound.j_to, bestMoveFound.i_from, bestMoveFound.j_from); // MAKE BEST MOVE
-
-            this.turn *= -1;
+        },
+        checkMate(board, side)
+        {
+            let isMate = true;
+            let sideFigures = this.CollectSideFigures(board, side);
+            for (sideFigure of sideFigures)
+            {
+                let sideMoves = this.FindMoves(board, sideFigure.i, sideFigure.j);
+                sideMoves = this.CutMoves(sideMoves, board, sideFigure.i, sideFigure.j, side);
+                if (sideMoves.length > 0)
+                {
+                    isMate = false;
+                    break;
+                }
+            }
+            if (isMate) return true;
+            else return false;
         },
         EvaluateBoard(board)
         {
